@@ -9,17 +9,6 @@ console.log('🚀 Micin Scanner Bot — AUTO-SCAN MODE');
 console.log(`Chains: ${config.CHAINS.join(', ')}`);
 console.log(`Alert to: ${config.TELEGRAM_USER_ID}`);
 
-// Whitelist: hanya kamu yang bisa akses bot
-const ALLOWED_USER_ID = config.TELEGRAM_USER_ID;
-
-function isAuthorized(update) {
-  const chatId = String(update.message?.chat?.id || '');
-  if (chatId !== ALLOWED_USER_ID) {
-    return false;
-  }
-  return true;
-}
-
 // State untuk deduplication
 const seenTokens = new Set();
 const ALERT_COOLDOWN_MS = 5 * 60 * 1000; // 5 menit cooldown per token
@@ -129,24 +118,3 @@ async function scanLoop() {
 
 // Start scanning
 scanLoop();
-
-// Handle incoming messages (whitelist)
-bot.on('message', (update) => {
-  if (!isAuthorized(update)) {
-    console.log(`[Scanner] Unauthorized access blocked: ID ${update.message.chat.id}`);
-    return; // Silent ignore — gak balas apapun
-  }
-
-  const text = update.message.text?.trim()?.toLowerCase();
-  if (!text) return;
-
-  if (text === '/stop') {
-    bot.stopPolling();
-    process.exit(0);
-  }
-
-  if (text.startsWith('/scan')) {
-    console.log('[Scanner] Manual scan triggered');
-    scanLoop();
-  }
-});
