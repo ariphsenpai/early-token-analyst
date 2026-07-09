@@ -1,9 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
-const { MicinScanner } = require('./src/MicinScanner');
+const { MicinScannerV2 } = require('./src/MicinScanner');
 const config = require('./config');
 
 const bot = new TelegramBot(config.BOT_TOKEN, { polling: true });
-const scanner = new MicinScanner();
+const scanner = new MicinScannerV2();
 
 console.log('🚀 Micin Scanner Bot — AUTO-SCAN MODE');
 console.log(`Chains: ${config.CHAINS.join(', ')}`);
